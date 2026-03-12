@@ -157,4 +157,121 @@ window.viewCourse = async (courseId) => {
                     </div>
                     <div class="modal-body">
                         <div class="course-detail-image">
-                            <img src="${course.imageUrl || 'assets/images/default-course.jpg'
+                            <img src="${course.imageUrl || 'assets/images/default-course.jpg'}" alt="${course.title?.['ar']}" style="width:100%; max-height:200px; object-fit:cover;">
+                        </div>
+                        
+                        <div class="course-description">
+                            <h4>وصف المساق</h4>
+                            <p>${course.description?.['ar'] || 'لا يوجد وصف'}</p>
+                        </div>
+                        
+                        <div class="course-tabs">
+                            <button class="tab-btn active" data-tab="books">الكتب</button>
+                            <button class="tab-btn" data-tab="lectures">المحاضرات</button>
+                            <button class="tab-btn" data-tab="exams">الاختبارات</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="tab-books">
+                            <p>جاري تحميل الكتب...</p>
+                        </div>
+                        <div class="tab-content" id="tab-lectures">
+                            <p>لا توجد محاضرات حالياً</p>
+                        </div>
+                        <div class="tab-content" id="tab-exams">
+                            <p>جاري تحميل الاختبارات...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // تحميل الكتب المرتبطة بالمساق
+            loadCourseBooks(courseId);
+            
+            // تحميل الاختبارات المرتبطة
+            loadCourseExams(courseId);
+            
+            // أحداث التبويبات
+            modal.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    modal.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const tabId = btn.dataset.tab;
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                });
+            });
+            
+            // إغلاق النافذة
+            modal.querySelector('.modal-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+        }
+    } catch (error) {
+        console.error('خطأ في عرض المساق:', error);
+        alert('حدث خطأ في عرض تفاصيل المساق');
+    }
+};
+
+async function loadCourseBooks(courseId) {
+    try {
+        const booksRef = collection(db, 'books');
+        const q = query(booksRef, where('courseId', '==', courseId));
+        const querySnapshot = await getDocs(q);
+        
+        const booksContainer = document.getElementById('tab-books');
+        
+        if (querySnapshot.empty) {
+            booksContainer.innerHTML = '<p>لا توجد كتب لهذا المساق</p>';
+            return;
+        }
+        
+        let html = '<div class="books-list">';
+        querySnapshot.forEach(doc => {
+            const book = doc.data();
+            html += `
+                <div class="book-item" onclick="showBookDetails('${doc.id}')">
+                    <i class="fas fa-book"></i>
+                    <span>${book.title?.['ar'] || 'كتاب'}</span>
+                </div>
+            `;
+        });
+        html += '</div>';
+        
+        booksContainer.innerHTML = html;
+        
+    } catch (error) {
+        console.error('خطأ في جلب الكتب:', error);
+        document.getElementById('tab-books').innerHTML = '<p>خطأ في تحميل الكتب</p>';
+    }
+}
+
+async function loadCourseExams(courseId) {
+    try {
+        const examsRef = collection(db, 'questions');
+        const q = query(examsRef, where('courseId', '==', courseId));
+        const querySnapshot = await getDocs(q);
+        
+        const examsContainer = document.getElementById('tab-exams');
+        const examCount = querySnapshot.size;
+        
+        if (examCount === 0) {
+            examsContainer.innerHTML = '<p>لا توجد اختبارات لهذا المساق</p>';
+            return;
+        }
+        
+        examsContainer.innerHTML = `
+            <div class="exam-info">
+                <p>عدد الأسئلة المتاحة: ${examCount}</p>
+                <button class="btn-primary" onclick="startExam('${courseId}')">بدء اختبار</button>
+            </div>
+        `;
+        
+    } catch (error) {
+        console.error('خطأ في جلب الاختبارات:', error);
+        document.getElementById('tab-exams').innerHTML = '<p>خطأ في تحميل الاختبارات</p>';
+    }
+}
