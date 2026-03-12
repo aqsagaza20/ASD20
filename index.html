@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>منصة التخصصات الطبية</title>
+    <meta name="description" content="منصة تعليمية متكاملة للطلاب في المجال الطبي - مساقات، كتب، اختبارات، قاموس طبي">
+    <meta name="theme-color" content="#007bff">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- CSS الرئيسي -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+</head>
+<body>
+    <!-- شاشة التحميل -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="spinner"></div>
+        <p>جاري تحميل المنصة الطبية...</p>
+    </div>
+
+    <!-- القائمة الجانبية (الـ 3 خطوط) -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="assets/images/logo.png" alt="شعار المنصة" onerror="this.src='https://via.placeholder.com/40x40/007bff/ffffff?text=Med'">
+                <h3>المنصة الطبية</h3>
+            </div>
+            <button id="closeSidebar" class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="sidebar-user" id="sidebarUserInfo">
+            <i class="fas fa-user-circle"></i>
+            <div>
+                <span id="sidebarSpecialty">زائر</span>
+                <small id="sidebarSession">جلسة مؤقتة</small>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="#" id="linkHome" class="active"><i class="fas fa-home"></i> <span>الرئيسية</span></a></li>
+            <li><a href="#" id="linkCourses"><i class="fas fa-book-open"></i> <span>المساقات</span></a></li>
+            <li><a href="#" id="linkBooks"><i class="fas fa-book"></i> <span>الكتب الطبية</span></a></li>
+            <li><a href="#" id="linkExams"><i class="fas fa-question-circle"></i> <span>الاختبارات</span></a></li>
+            <li><a href="#" id="linkDictionary"><i class="fas fa-language"></i> <span>القاموس الطبي</span></a></li>
+            <li><a href="#" id="linkFlashcards"><i class="fas fa-layer-group"></i> <span>البطاقات التعليمية</span></a></li>
+            <li class="divider"></li>
+            <li><a href="#" id="linkNotes"><i class="fas fa-sticky-note"></i> <span>ملاحظاتي</span></a></li>
+            <li><a href="#" id="linkFavorites"><i class="fas fa-heart"></i> <span>المفضلة</span></a></li>
+            <li><a href="#" id="linkStats"><i class="fas fa-chart-line"></i> <span>إحصائياتي</span></a></li>
+            <li class="divider"></li>
+            <li><a href="#" id="linkSettings"><i class="fas fa-cog"></i> <span>الإعدادات</span></a></li>
+            <li><a href="#" id="linkHelp"><i class="fas fa-question-circle"></i> <span>مساعدة</span></a></li>
+            <li><a href="#" id="linkAbout"><i class="fas fa-info-circle"></i> <span>عن المنصة</span></a></li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <button id="changeSpecialtyBtn"><i class="fas fa-exchange-alt"></i> تغيير التخصص</button>
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div id="mainContent">
+        <!-- الشريط العلوي -->
+        <header>
+            <div class="header-right">
+                <button id="menuToggle" class="menu-btn"><i class="fas fa-bars"></i></button>
+                <h2 id="pageTitle">الرئيسية</h2>
+            </div>
+            
+            <div class="header-left">
+                <button id="searchToggle" class="icon-btn"><i class="fas fa-search"></i></button>
+                <button id="themeToggle" class="icon-btn"><i class="fas fa-moon"></i></button>
+                <button id="languageToggle" class="lang-btn">EN</button>
+            </div>
+        </header>
+
+        <!-- شريط البحث (يظهر عند الضغط على أيقونة البحث) -->
+        <div id="searchBar" class="search-bar hidden">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="globalSearch" placeholder="ابحث عن مساق، كتاب، مصطلح طبي..." autocomplete="off">
+                <button id="clearSearch" class="clear-search hidden"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <!-- منطقة عرض الصفحات -->
+        <main id="pageContent">
+            <!-- سيتم تحميل المحتوى هنا ديناميكياً -->
+        </main>
+
+        <!-- القائمة السفلية (للموبايل) -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+            <a href="#" class="nav-item" data-page="courses"><i class="fas fa-book-open"></i><span>المساقات</span></a>
+            <a href="#" class="nav-item" data-page="exams"><i class="fas fa-pencil-alt"></i><span>الاختبارات</span></a>
+            <a href="#" class="nav-item" data-page="dictionary"><i class="fas fa-language"></i><span>القاموس</span></a>
+            <a href="#" class="nav-item" data-page="favorites"><i class="fas fa-heart"></i><span>المفضلة</span></a>
+        </nav>
+    </div>
+
+    <!-- نافذة اختيار التخصص المنبثقة -->
+    <div id="specialtyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-stethoscope"></i> اختر تخصصك الطبي</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>اختر تخصصك لنساعدك في عرض المحتوى المناسب لك:</p>
+                <div class="specialty-grid">
+                    <div class="specialty-card" data-specialty="medicine">
+                        <i class="fas fa-user-md"></i>
+                        <span>الطب البشري</span>
+                    </div>
+                    <div class="specialty-card" data-specialty="nursing">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <span>التمريض</span>
+                    </div>
+                    <div class="specialty-card" data-specialty="pharmacy">
+                        <i class="fas fa-pills"></i>
+                        <span>الصيدلة</span>
+                    </div>
+                    <div class="specialty-card" data-specialty="lab">
+                        <i class="fas fa-microscope"></i>
+                        <span>المختبرات</span>
+                    </div>
+                    <div class="specialty-card" data-specialty="physio">
+                        <i class="fas fa-bone"></i>
+                        <span>العلاج الطبيعي</span>
+                    </div>
+                </div>
+                <p class="note">يمكنك تغيير التخصص لاحقاً من القائمة الجانبية</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة عرض الكتاب (PDF) -->
+    <div id="bookViewerModal" class="modal">
+        <div class="modal-content fullscreen">
+            <div class="modal-header">
+                <h3 id="bookViewerTitle">عرض الكتاب</h3>
+                <div>
+                    <button id="downloadBookBtn" class="btn-icon"><i class="fas fa-download"></i></button>
+                    <button id="favoriteBookBtn" class="btn-icon"><i class="far fa-heart"></i></button>
+                    <button class="modal-close"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <iframe id="bookViewerFrame" class="pdf-viewer"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الاختبار -->
+    <div id="examModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="examModalTitle">الاختبار</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="examModalBody">
+                <!-- محتوى الاختبار -->
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة ملاحظة -->
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة ملاحظة جديدة</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="noteTitle" placeholder="عنوان الملاحظة">
+                <textarea id="noteContent" placeholder="محتوى الملاحظة" rows="5"></textarea>
+                <select id="noteCourse">
+                    <option value="">ربط بمساق (اختياري)</option>
+                </select>
+                <button id="saveNoteBtn" class="btn-primary">حفظ الملاحظة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/session.js"></script>
+    <script type="module" src="js/app.js"></script>
+    
+    <!-- Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('✅ Service Worker registered'))
+                    .catch(err => console.log('❌ Service Worker error:', err));
+            });
+        }
+    </script>
+</body>
+</html>
